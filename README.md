@@ -61,7 +61,7 @@ aliaces:
 Usage: git2nd clone
 ```
 
-![clone](https://i.imgur.com/5DOPVpI.png)
+![clone](https://i.imgur.com/vF6j8Fo.png)
 
 * status
 
