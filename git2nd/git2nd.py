@@ -266,7 +266,13 @@ Optinos:
         exit()
     else:
         now = branch_func()[0]
-        merge_func(now, args.args[0])
+        if args.args[0] == 'm':
+            branch = 'master'
+        elif args.args[0] == 'd':
+            branch = 'develop'
+        else:
+            branch = args.args[0]
+        merge_func(now, branch)
 
 def merge_func(now, to):
     """
