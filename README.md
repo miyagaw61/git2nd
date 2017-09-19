@@ -82,14 +82,18 @@ Options:
 * commit
 
     + auto sed
+    ```
     ^u -> [update]
     ^a -> [add]
     ^n -> [new]
     ^b -> [bugfix]
     ^d -> [delete]
+    ```
 
     + title sed
+    ```
     u foobar -> [update]title : foobar
+    ```
 
 ```
 Usage: git2nd commit [-a|--amend] (title)
