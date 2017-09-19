@@ -80,7 +80,6 @@ Options:
 ![add](https://i.imgur.com/wrVvlcM.png)
 
 * commit
-
 ```
 Usage: git2nd commit [-a|--amend] (title)
    or: gic           [-a|--amend] (title)
@@ -90,17 +89,13 @@ options:
   -a|--amend    re_commit(git commit --amend)
   title         add title auto
 ```
-
     + auto sed
-
 > ^u -> [update]
 > > ^a -> [add]
 > ^n -> [new]
 > ^b -> [bugfix]
 > ^d -> [delete]
-
     + title sed
-
 > u foobar -> [update]title : foobar
 
 
