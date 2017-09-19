@@ -507,16 +507,6 @@ Positional Options:
         now = branches[0]
         mp_func(now, args.branch)
 
-    if args.help:
-        print(mp_usage)
-        exit()
-    elif not args.branch in branches:
-        print(mp_usage)
-        exit()
-    else:
-        now = branches[0]
-        mp_func(now, args.branch)
-
 def mp_func(now, to):
     merge_func(now, to)
     shell('git checkout ' + to).call()
