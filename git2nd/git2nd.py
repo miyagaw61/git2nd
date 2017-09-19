@@ -128,8 +128,9 @@ def commit_func(amend=False, title=None):
         f.rm()
 
 def push_routine():
-    push_usage = 'git2nd push'
-    push_args  = []
+    push_usage = '''\
+Usage: git2nd push'
+'''
     parser = mkparser(push_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
