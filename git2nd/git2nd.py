@@ -497,23 +497,23 @@ def mp_func(now, to):
 
 def main():
     usage = '''\
-    Usage: git2nd [s|status] [a|add] [c|commit] [p|push] [b|branch] [m|merge] [t|tag] [l|log]
-                  [ac] [cp] [acp] [mp]
+Usage: git2nd [s|status] [a|add] [c|commit] [p|push] [b|branch] [m|merge] [t|tag] [l|log]
+              [ac] [cp] [acp] [mp]
 
-    SubCommands:
-      clone     easy clone
-      status    print status
-      add       git add
-      commit    git commit -m
-      push      git push origin now branch
-      branch    git branch and git checkout
-      merge     git merge command
-      tag       git tag , git tag -a
-      log       git log and git log --oneline
-      ac        git2nd add -> git2nd commit
-      cp        git2nd commit -> git2nd push
-      acp       git2nd ac -> git2nd push
-      mp        git2nd merge -> git2nd push
+SubCommands:
+  clone     easy clone
+  status    print status
+  add       git add
+  commit    git commit -m
+  push      git push origin now branch
+  branch    git branch and git checkout
+  merge     git merge command
+  tag       git tag , git tag -a
+  log       git log and git log --oneline
+  ac        git2nd add -> git2nd commit
+  cp        git2nd commit -> git2nd push
+  acp       git2nd ac -> git2nd push
+  mp        git2nd merge -> git2nd push
     '''
 
     lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
