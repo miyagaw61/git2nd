@@ -70,8 +70,8 @@ Usage: git2nd clone
 * add
 
 ```
-Usage: git2nd add [file...]'
-   or: gia        [file...]'
+Usage: git2nd add [file...]
+   or: gia        [file...]
 
 Options:
     file    file name

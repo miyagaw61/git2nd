@@ -36,8 +36,8 @@ def status_func():
 
 def add_routine():
     add_usage = '''\
-Usage: git2nd add [file...]'
-   or: gia        [file...]'
+Usage: git2nd add [file...]
+   or: gia        [file...]
 
 Options:
     file    file name
