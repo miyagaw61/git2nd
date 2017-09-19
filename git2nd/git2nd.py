@@ -129,7 +129,7 @@ def commit_func(amend=False, title=None):
 
 def push_routine():
     push_usage = '''\
-Usage: git2nd push'
+Usage: git2nd push
 '''
     parser = mkparser(push_usage)
     if regex_gi.findall(argv[0]):
