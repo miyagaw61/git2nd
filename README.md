@@ -40,7 +40,7 @@ SubCommands:
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
-  stash     作成中
+  stash     作成中 comming soon
  
 aliaces:
   gis       git2nd status
