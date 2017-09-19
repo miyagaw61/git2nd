@@ -497,8 +497,9 @@ def mp_func(now, to):
 
 def main():
     usage = '''\
-Usage: git2nd [s|status] [a|add] [c|commit] [p|push] [b|branch] [m|merge] [t|tag] [l|log]
-              [ac] [cp] [acp] [mp]
+Usage: git2nd [clone] [s|status] [a|add] [c|commit]
+              [p|push] [b|branch] [m|merge] [t|tag]
+              [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
 
 SubCommands:
   clone     easy clone
@@ -510,6 +511,7 @@ SubCommands:
   merge     git merge command
   tag       git tag , git tag -a
   log       git log and git log --oneline
+  diff      git diff
   ac        git2nd add -> git2nd commit
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
