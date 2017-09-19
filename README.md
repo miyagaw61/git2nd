@@ -186,6 +186,8 @@ Options:
 
 add -> commit
 
+> 引数が1ファイルの時のみtitleとしてファイル名が自動挿入される。
+
 ```
 Usage: git2nd ac [-t|--title <title>] [file]
    or: giac      [-t|--title <title>] [file]
