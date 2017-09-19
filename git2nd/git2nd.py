@@ -166,22 +166,44 @@ def push_func():
 
 def branch_routine():
     branch_usage = '''\
-Usage: git2nd branch (branch)
+Usage: git2nd branch [-d|--delete] [-D|--DELETE] (branch)
 
-Options:
+Positional Options:
   (None)    show branches
   branch    change or create
+
+Optional Options:
+  -d        delete branch
+  -D        force delete branch
 '''
     #branch_args  = ['(None):print now branch', 'branch:make or change branch']
     parser = mkparser(branch_usage)
+    parser.add_argument('-d', '--delete', dest='delete')
+    parser.add_argument('-D', '--DELETE', dest='force')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
         args = parser.parse_args(argv[1:])
     if args.help:
         print(branch_usage)
-        eixt()
-    elif len(args.args) == 0:
+        exit()
+    elif len(args.args) == 0 and not args.delete and not args.force:
+        branch_func('out')
+    elif args.delete:
+        out, err = shell('git branch -d ' + args.delete).linedata()
+        if err:
+            for x in err:
+                print(red(x))
+        else:
+            inf('delete ' + args.delete)
+        branch_func('out')
+    elif args.force:
+        out, err = shell('git branch -D ' + args.force).linedata()
+        if err:
+            for x in err:
+                print(red(x))
+        else:
+            inf('delete ' + args.force)
         branch_func('out')
     else:
         branches = branch_func()
@@ -258,16 +280,18 @@ def merge_func(now, to):
 
 def tag_routine():
     tag_usage = '''\
-Usage: git2nd tag [-a] [name]
+Usage: git2nd tag [-a] [-d] [name]
 
 Positional options:
   name    tag name
 
 Optional options:
   -a      git -a tag
+  -d      delete tag
 '''
     parser = mkparser(tag_usage)
     parser.add_argument('-a', action='store_true', dest='a')
+    parser.add_argument('-d', action='store_true', dest='d')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -276,21 +300,28 @@ Optional options:
         print(tag_usage)
         exit()
     elif len(args.args) < 1:
-        print(tag_usage)
-        exit()
+        shell('git tag').call()
     elif args.a:
         tag_func(args.args[0], a_option=True)
+    elif args.d:
+        tag_func(args.args[0], d_option=True)
     else:
         tag_func(args.args[0])
 
-def tag_func(tag, a_option=False):
+def tag_func(tag, a_option=False, d_option=False):
     """
     tag_func(str tag, bool a_option)
     """
-    if a_option == True:
+    if a_option:
+        inf('create tag \'' + tag + '\' -> push')
         shell('git tag -a ' + tag).call()
         shell('git push origin --tags').call()
+    elif d_option:
+        inf('delete tag \'' + tag + '\' -> push')
+        shell('git tag -d ' + tag).call()
+        shell('git push origin :' + tag).call()
     else:
+        inf('create tag \'' + tag + '\' -> push')
         shell('git tag ' + tag).call()
         shell('git push origin --tags').call()
 
@@ -394,6 +425,9 @@ Optional Options:
     if args.help:
         print(acp_usage)
         exit()
+    elif len(args.args) < 1:
+        print(acp_usage)
+        exit()
     if args.title:
         title = args.title
     else:
@@ -421,9 +455,6 @@ Optional Options:
     else:
         args = parser.parse_args(argv[1:])
     if args.help:
-        print(cp_usage)
-        exit()
-    elif len(args.args) < 1:
         print(cp_usage)
         exit()
     elif args.title:
