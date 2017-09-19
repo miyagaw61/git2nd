@@ -5,6 +5,8 @@
 
 This is very easy to use git.
 
+![git2nd](https://i.imgur.com/o0PdcOa.png)
+
 ## Install
 
 ```bash
