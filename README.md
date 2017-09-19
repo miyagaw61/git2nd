@@ -21,9 +21,9 @@ python setup.py install
 
 * git2nd -h
 ```
-Usage: git2nd [clone] [s|status] [a|add] [c|commit]
-              [p|push] [b|branch] [m|merge] [t|tag]
-              [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
+Usage: git2nd [clone] [s|status] [a|add] [c|commit] [p|push]
+              [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff]
+              [stash] [ac] [cp] [acp] [mp]
 
 SubCommands:
   clone     easy clone
@@ -40,6 +40,7 @@ SubCommands:
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
+  stash     作成中
  
 aliaces:
   gis       git2nd status
@@ -53,6 +54,7 @@ aliaces:
   gicp      git2nd cp
   giacp     git2nd acp
   gimp      git2nd mp
+  gish      git2nd stash
 ```
 
 * clone
@@ -106,6 +108,8 @@ options:
 * push
 
 push now branch
+
+> masterにpushする場合のみ、本当にpushしても良いかの確認を取られる。
 
 ```
 Usage: git2nd push
@@ -259,3 +263,9 @@ Positional Options:
 ```
 
 ![mp](https://i.imgur.com/sl3qHMj.png)
+
+* stash
+
+作成中。
+
+comming soon.
