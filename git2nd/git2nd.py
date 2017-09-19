@@ -505,9 +505,21 @@ Positional Options:
     parser = mkparser(mp_usage)
     parser.add_argument('branch', choices=branches)
     if regex_gi.findall(argv[0]):
-        args = parser.parse_args(argv[2:])
+        if argv[2] == 'm':
+            lst = ['master']
+        elif argv[2] == 'd':
+            lst = ['develop']
+        else:
+            lst = argv[2:]
+        args = parser.parse_args(lst)
     else:
-        args = parser.parse_args(argv[1:])
+        if argv[1] == 'm':
+            lst = ['master']
+        elif argv[1] == 'd':
+            lst = ['develop']
+        else:
+            lst = argv[1:]
+        args = parser.parse_args(lst)
     if args.help:
         print(mp_usage)
         exit()
