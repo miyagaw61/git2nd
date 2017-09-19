@@ -133,6 +133,10 @@ Optional Options:
 
 * merge
 
+> auto change
+> > * m -> master
+> > * d -> develop
+
 ```
 Usage: git2nd merge [branch]
    or: gim          [branch]
@@ -241,6 +245,10 @@ Optional Options:
 * mp
 
 merge -> push
+
+> auto change
+> > * m -> master
+> > * d -> develop
 
 ```
 Usage: git2nd mp [branch]
