@@ -37,6 +37,7 @@ def status_func():
 def add_routine():
     add_usage = '''\
 Usage: git2nd add [file...]'
+   or: gia        [file...]'
 
 Options:
     file    file name
@@ -66,7 +67,8 @@ def add_func(files):
 
 def commit_routine():
     commit_usage = '''\
-git2nd commit [-a|--amend] (title)
+Usage: git2nd commit [-a|--amend] (title)
+   or: gic           [-a|--amend] (title)
 
 options:
   (None)        commit no title
@@ -130,6 +132,7 @@ def commit_func(amend=False, title=None):
 def push_routine():
     push_usage = '''\
 Usage: git2nd push
+   or: gip
 '''
     parser = mkparser(push_usage)
     if regex_gi.findall(argv[0]):
@@ -168,6 +171,7 @@ def push_func():
 def branch_routine():
     branch_usage = '''\
 Usage: git2nd branch [-d|--delete] [-D|--DELETE] (branch)
+   or: gib           [-d|--delete] [-D|--DELETE] (branch)
 
 Positional Options:
   (None)    show branches
@@ -244,6 +248,7 @@ def branch_func(fmt='ret'):
 def merge_routine():
     merge_usage = '''\
 Usage: git2nd merge [branch]
+   or: gim          [branch]
 
 Optinos:
   branch   branch name
@@ -329,6 +334,7 @@ def tag_func(tag, a_option=False, d_option=False):
 def log_routine():
     log_usage = '''\
 Usage: git2nd log [-v|--verbose]
+   or: gil        [-v|--verbose]
 
 Options:
   -v    show verbose(show detail)
@@ -350,6 +356,7 @@ Options:
 def diff_routine():
     diff_usage = '''\
 Usage: git2nd diff [file]
+   or: giff       [file]
 
 Options:
   file    file name
@@ -371,6 +378,7 @@ Options:
 def ac_routine():
     ac_usage = '''\
 Usage: git2nd ac [-t|--title <title>] [file]
+   or: giac      [-t|--title <title>] [file]
 
 Positional Options:
   file    file name
@@ -410,6 +418,7 @@ def ac_func(files, title=None):
 def acp_routine():
     acp_usage = '''\
 Usage: git2nd acp [-t|--title <title>] [files...]
+   or: giacp      [-t|--title <title>] [files...]
 
 Positional Options:
   files    file name
@@ -441,8 +450,8 @@ def acp_func(files, title=None):
 
 def cp_routine():
     cp_usage = '''\
-Usage: git2nd cp [-t|--title <title>]
-   or: git2nd cp [-a|--amend]
+Usage: git2nd cp [-t|--title <title>] [-a|--amend]
+   or: gicp      [-t|--title <title>] [-a|--amend]
 
 Optional Options:
   -t    title message
@@ -488,6 +497,7 @@ def mp_routine():
     branches = branch_func()
     mp_usage = '''\
 Usage: git2nd mp [branch]
+   or: gimp      [branch]
 
 Positional Options:
   branch   dest branch name ''' + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
@@ -538,6 +548,19 @@ SubCommands:
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
+ 
+aliaces:
+  gis       git2nd status
+  gia       git2nd add
+  gic       git2nd commit
+  gip       git2nd push
+  gib       git2nd branch
+  gil       git2nd log
+  giff      git2nd diff
+  giac      git2nd ac
+  gicp      git2nd cp
+  giacp     git2nd acp
+  gimp      git2nd mp
     '''
 
     lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
