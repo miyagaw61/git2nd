@@ -101,6 +101,9 @@ options:
 > title sed
 > > * u foobar -> [update]title : foobar
 
+> editor selct
+> > * (bash)export EDITOR='nano'
+
 ![commit1](https://i.imgur.com/TOHDPMP.png)
 ![commit2](https://i.imgur.com/VxR0qz6.png)
 ![commit3](https://i.imgur.com/5Y36oUU.png)
