@@ -204,7 +204,7 @@ def init_func():
         f.add('.gitattributes\n')
     else:
         exist_flag = False
-        liendata = f.linedata()
+        linedata = f.linedata()
         if not '.gitignore' in linedata:
             f.add('.gitignore\n')
         if not '.gitattributes' in linedata:
