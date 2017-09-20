@@ -284,6 +284,7 @@ def merge_func(now, to):
     """
     merge_func(str to)
     """
+    shell('git config --global merge.log true').call()
     out, err = shell('git checkout ' + to).linedata()
     inf('merge ' + blue(now, 'bold') + red(' -> ', 'bold') + blue(to, 'bold'))
     shell('git merge ' + now + ' 2> /tmp/.git2nd.tmp').call()
