@@ -91,8 +91,8 @@ Optional options:
   -d      delete tag
 '''
 log_usage = '''\
-Usage: git2nd log [-v|--verbose]
-   or: gil        [-v|--verbose]
+Usage: git2nd log [-v|--verbose] [-n <num>]
+   or: gil        [-v|--verbose] [-n <num>]
 
 Options:
   -v    show verbose(show detail)
@@ -137,7 +137,7 @@ Usage: git2nd mp [branch]
    or: gimp      [branch]
 
 Positional Options:
-  branch   dest branch name ''' + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
+  branch   dest branch name '''
 stash_usage = '''\
 Usage: git2nd stash
 '''
@@ -429,6 +429,7 @@ def tag_func(tag, a_option=False, d_option=False):
 def log_routine():
     parser = mkparser(log_usage)
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-n', dest='num')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -437,9 +438,15 @@ def log_routine():
         print(log_usage)
         exit()
     elif args.verbose:
-        shell('git log --decorate=short -p').call()
+        if args.num:
+            shell('git log --decorate=short -p -' + args.num).call()
+        else:
+            shell('git log --decorate=short -p').call()
     else:
-        shell('git log --decorate=short --oneline -3').call()
+        if args.num:
+            shell('git log --decorate=short --oneline -' + args.num).call()
+        else:
+            shell('git log --decorate=short --oneline -3').call()
 
 def diff_routine():
     parser = mkparser(diff_usage)
@@ -547,6 +554,7 @@ def cp_func(amend=False, title=None):
         push_func()
 
 def mp_routine():
+    mp_usage = mp_usage + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
     branches = branch_func()
 
     parser = mkparser(mp_usage)
