@@ -215,6 +215,12 @@ Optional Options:
         if args.args[0] in branches: #exist
             shell('git checkout ' + args.args[0] + ' > /dev/null').call()
             branch_func('out')
+        elif args.args[0] == 'm':
+            shell('git checkout master > /dev/null').call()
+            branch_func('out')
+        elif args.args[0] == 'd':
+            shell('git checkout develop > /dev/null').call()
+            branch_func('out')
         else: #not exist
             print('add branch \'' + args.args[0] + '\'')
             shell('git branch ' + args.args[0] + ' > /dev/null').call()
@@ -355,7 +361,7 @@ Options:
         print(log_usage)
         exit()
     elif args.verbose:
-        shell('git log --decorate=short -5').call()
+        shell('git log --decorate=short -p').call()
     else:
         shell('git log --decorate=short --oneline -3').call()
 
@@ -543,7 +549,10 @@ def mp_func(now, to):
     shell('git checkout ' + now).call()
     inf('checkout ' + now)
 
-#TODO:add stash command
+def stash_routine():
+    stash_usage = '''\
+Usage: git2nd stash
+'''
 
 def main():
     usage = '''\
@@ -581,7 +590,7 @@ aliases:
   gimp      git2nd mp
     '''
 
-    lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(usage, lst)
 
     if argc < 2:
@@ -611,6 +620,8 @@ aliases:
         log_routine()
     elif args.command in ['diff', 'd', 'f']:
         diff_routine()
+    elif args.command == 'stash':
+        stash_routine()
     elif args.command == 'clone':
         clone_routine()
     elif args.command == 'ac':
