@@ -560,20 +560,20 @@ def diff_routine():
         print(diff_usage)
         exit()
     elif args.commit:
-        shell('git diff --cached ' + args.args[0]).call()
+        shell('git diff --color-words --cached ' + args.args[0]).call()
     elif args.args[0].count('..') > 0:
         regex_head = re.compile(r'\.\.')
         repository = regex_head.sub('', args.args[0])
         if args.args[0][0] == '.':
-            shell('git diff HEAD..origin/' + repository).call()
+            shell('git diff --color-words HEAD..origin/' + repository).call()
         elif args.args[0][-1] == '.':
-            shell('git diff origin/' + repository + '..HEAD').call()
+            shell('git diff --color-words origin/' + repository + '..HEAD').call()
     elif args.args[0] == 'head' or args.args[0] == 'h':
-        shell('git diff HEAD^').call()
+        shell('git diff --color-words HEAD^').call()
     elif regex_sha.findall(args.args[0]):
-        shell('git diff ' + args.args[0] + '^..' + args.args[0]).call()
+        shell('git diff --color-words ' + args.args[0] + '^..' + args.args[0]).call()
     else:
-        shell('git diff ' + args.args[0]).call()
+        shell('git diff --color-words ' + args.args[0]).call()
 
 def ac_routine():
     parser = mkparser(usage=ac_usage)
