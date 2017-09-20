@@ -215,6 +215,12 @@ Optional Options:
         if args.args[0] in branches: #exist
             shell('git checkout ' + args.args[0] + ' > /dev/null').call()
             branch_func('out')
+        elif args.args[0] == 'm':
+            shell('git checkout master > /dev/null').call()
+            branch_func('out')
+        elif args.args[0] == 'd':
+            shell('git checkout develop > /dev/null').call()
+            branch_func('out')
         else: #not exist
             print('add branch \'' + args.args[0] + '\'')
             shell('git branch ' + args.args[0] + ' > /dev/null').call()
