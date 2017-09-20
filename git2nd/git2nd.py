@@ -158,13 +158,13 @@ Usage: git2nd stash
 '''
 return_usage = '''\
 Usage: git2nd return [head <file>] [add <file>] [commit --soft] [commit --hard]
-   or: gir             [head <file>] [add <file>] [commit --soft] [commit --hard]
+   or: gir           [head <file>] [add <file>] [commit --soft] [commit --hard]
 
 Options:
-  head             return to HEAD
-  add              return add
-  commit --soft    return commit soft
-  commit --hard    return commit hard
+  head             return to newest commit
+  add              return to before add 
+  commit --soft    return to before commit and keep changes
+  commit --hard    return to before commit and delete changes
 '''
 
 def init_func():
@@ -727,7 +727,7 @@ def return_routine():
         if len(args.args) < 1:
             print(return_usage)
             exit()
-        inf('return to HEAD \'' + args.args[0] + '\'')
+        inf('return to newest commit \'' + args.args[0] + '\'')
         shell('git checkout HEAD ' + args.args[0]).call()
     elif args.command == 'add':
         if len(args.args) < 1:
