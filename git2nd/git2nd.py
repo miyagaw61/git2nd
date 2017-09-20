@@ -1,15 +1,16 @@
 from enert import *
-import re
+import re, os
 import __main__
 
 regex_gi = re.compile(r'(gi$|git2nd$)')
 
 main_usage = '''\
-Usage: git2nd [clone] [s|status] [a|add] [c|commit]
+Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit]
               [p|push] [b|branch] [m|merge] [t|tag]
               [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
 
 SubCommands:
+  init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
   clone     easy clone
   status    print status
   add       git add
@@ -39,6 +40,12 @@ aliases:
   giacp     git2nd acp
   gimp      git2nd mp
     '''
+init_usage = '''\
+Usage: git2nd init (url)
+
+Optional Options:
+  url    remote repository url
+'''
 clone_usage = '''\
 Usage: git2nd clone
 '''
@@ -148,6 +155,61 @@ stash_usage = '''\
 Usage: git2nd stash
 '''
 
+def init_func():
+    if not 'GIT_NAME' in os.environ:
+        print('you have to export \'GIT_NAME\'')
+        exit()
+    if not 'GIT_EMAIL' in os.environ:
+        print('you have to export \'GIT_EMAIL\'')
+        exit()
+    parser = mkparser(init_usage)
+    args = parser.parse_args(argv[2:])
+    if args.help:
+        print(init_usage)
+        exit()
+    shell('git init').call()
+    if len(args.args) > 0:
+        shell('git remote add origin ' + args.args[0]).call()
+    shell('git config --global diff.renames true').call()
+    shell('git config --global merge.log true').call()
+    shell('git config --global color.ui auto ').call()
+    shell('git config --global user.name "' + os.environ['GIT_NAME'] + '"').call()
+    shell('git config --global user.email "' + os.environ['GIT_EMAIL'] + '"').call()
+    shell('git config --global color.diff auto').call()
+    shell('git config --global color.status auto').call()
+    shell('git config --global color.branch auto').call()
+    shell('git config --global core.quotepath false').call()
+    f = fl('.gitattributes')
+    if not f.exist():
+        buf = '''\
+*.c diff=cpp
+*.h diff=cpp
+*.cpp diff=cpp
+*.hpp diff=cpp
+*.m diff=objc
+*.java diff=java
+*.html diff=html
+*.pl diff=perl
+*.pm diff=perl
+*.t diff=perl
+*.php diff=php
+*.py diff=python
+*.rb diff=ruby
+*.js diff=java
+'''
+        f.write(buf)
+    f = fl('.gitignore')
+    if not f.exist():
+        f.write('.gitignore\n')
+        f.add('.gitattributes\n')
+    else:
+        exist_flag = False
+        liendata = f.linedata()
+        if not '.gitignore' in linedata:
+            f.add('.gitignore\n')
+        if not '.gitattributes' in linedata:
+            f.add('.gitattributes\n')
+
 def clone_routine():
     parser = mkparser(clone_usage)
     args = parser.parse_args()
@@ -169,7 +231,7 @@ def status_func():
     print('='*size_x)
     os.system('ls --color=auto')
     print('='*size_x)
-    shell('git status').call()
+    shell('git status --short').call()
 
 def add_routine():
     parser = mkparser(add_usage)
@@ -193,10 +255,9 @@ def add_func(files):
             shell('git add ' + x).call()
     else:
         shell('git add ' + files).call()
-    shell('git status').call()
+    shell('git status --short').call()
 
 def commit_routine():
-
     parser = mkparser(commit_usage)
     #parser.add_argument('-t', '--title', dest='title')
     parser.add_argument('-a', '--amend', action='store_true')
@@ -382,7 +443,6 @@ def merge_func(now, to):
     """
     merge_func(str to)
     """
-    shell('git config --global merge.log true').call()
     out, err = shell('git checkout ' + to).linedata()
     inf('merge ' + blue(now, 'bold') + red(' -> ', 'bold') + blue(to, 'bold'))
     shell('git merge ' + now + ' 2> /tmp/.git2nd.tmp').call()
@@ -445,19 +505,17 @@ def log_routine():
         exit()
     elif args.verbose:
         if args.num:
-            shell('git log --decorate=short -p -' + args.num).call()
+            shell('git log --graph --decorate=short -p -' + args.num).call()
         else:
-            shell('git log --decorate=short -p').call()
+            shell('git log --graph --decorate=short -p').call()
     else:
         if args.num:
-            shell('git log --decorate=short --oneline -' + args.num).call()
+            shell('git log --graph --decorate=short --oneline -' + args.num).call()
         else:
-            shell('git log --decorate=short --oneline -3').call()
+            shell('git log --graph --decorate=short --oneline -3').call()
 
 def diff_routine():
     parser = mkparser(diff_usage)
-    parser.add_argument('-c', '--commit', action='store_true')
-    regex_sha = re.compile(r'[0123456789abcdef]{7}')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -468,19 +526,6 @@ def diff_routine():
     elif len(args.args) < 1:
         print(diff_usage)
         exit()
-    elif args.commit:
-        shell('git diff --cached ' + args.args[0]).call()
-    elif args.args[0].count('..') > 0:
-        regex_head = re.compile(r'\.\.')
-        repository = regex_head.sub('', args.args[0])
-        if args.args[0][0] == '.':
-            shell('git diff HEAD..origin/' + repository).call()
-        elif args.args[0][-1] == '.':
-            shell('git diff origin/' + repository + '..HEAD').call()
-    elif args.args[0] == 'head' or args.args[0] == 'h':
-        shell('git diff HEAD^').call()
-    elif regex_sha.findall(args.args[0]):
-        shell('git diff ' + args.args[0] + '^..' + args.args[0]).call()
     else:
         shell('git diff ' + args.args[0]).call()
 
@@ -623,8 +668,7 @@ def stash_routine():
     print('comming soon.')
 
 def main():
-
-    lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -636,7 +680,9 @@ def main():
         print(main_usage)
         exit()
 
-    if args.command in ['status', 's']:
+    if args.command == 'init':
+        init_func()
+    elif args.command in ['status', 's']:
         status_func()
     elif args.command in ['add', 'a']:
         add_routine()
