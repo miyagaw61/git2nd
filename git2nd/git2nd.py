@@ -4,14 +4,145 @@ import re
 regex_gi = re.compile(r'(gi$|git2nd$)')
 
 main_usage = '''\
-git2nd [s|status] [a|add] [c|commit] [p|push] [b|branch] [m|merge] [t|tag] [l|log]
-       [ac] [acp]
+Usage: git2nd [clone] [s|status] [a|add] [c|commit]
+              [p|push] [b|branch] [m|merge] [t|tag]
+              [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
+
+SubCommands:
+  clone     easy clone
+  status    print status
+  add       git add
+  commit    git commit -m
+  push      git push origin now branch
+  branch    git branch and git checkout
+  merge     git merge command
+  tag       git tag , git tag -a
+  log       git log and git log --oneline
+  diff      git diff
+  stash     comming soon.
+  ac        git2nd add -> git2nd commit
+  cp        git2nd commit -> git2nd push
+  acp       git2nd ac -> git2nd push
+  mp        git2nd merge -> git2nd push
+ 
+aliases:
+  gis       git2nd status
+  gia       git2nd add
+  gic       git2nd commit
+  gip       git2nd push
+  gib       git2nd branch
+  gil       git2nd log
+  giff      git2nd diff
+  giac      git2nd ac
+  gicp      git2nd cp
+  giacp     git2nd acp
+  gimp      git2nd mp
+    '''
+clone_usage = '''\
+Usage: git2nd clone
+'''
+add_usage = '''\
+Usage: git2nd add [file...]
+   or: gia        [file...]
+
+Options:
+    file    file name
+'''
+commit_usage = '''\
+Usage: git2nd commit [-a|--amend] (title)
+   or: gic           [-a|--amend] (title)
+
+options:
+  (None)        commit no title
+  -a|--amend    re_commit(git commit --amend)
+  title         add title auto
+'''
+push_usage = '''\
+Usage: git2nd push
+   or: gip
+'''
+branch_usage = '''\
+Usage: git2nd branch [-d|--delete] [-D|--DELETE] (branch)
+   or: gib           [-d|--delete] [-D|--DELETE] (branch)
+
+Positional Options:
+  (None)    show branches
+  branch    change or create
+
+Optional Options:
+  -d        delete branch
+  -D        force delete branch
+'''
+merge_usage = '''\
+Usage: git2nd merge [branch]
+   or: gim          [branch]
+
+Optinos:
+  branch   branch name
+'''
+tag_usage = '''\
+Usage: git2nd tag [-a] [-d] [name]
+
+Positional options:
+  name    tag name
+
+Optional options:
+  -a      git -a tag
+  -d      delete tag
+'''
+log_usage = '''\
+Usage: git2nd log [-v|--verbose]
+   or: gil        [-v|--verbose]
+
+Options:
+  -v    show verbose(show detail)
+'''
+diff_usage = '''\
+Usage: git2nd diff [file]
+   or: giff       [file]
+
+Options:
+  file    file name
+'''
+ac_usage = '''\
+Usage: git2nd ac [-t|--title <title>] [file]
+   or: giac      [-t|--title <title>] [file]
+
+Positional Options:
+  file    file name
+
+Optional Options:
+  -t      Add original title. If no this option, title is first file name.
+'''
+acp_usage = '''\
+Usage: git2nd acp [-t|--title <title>] [files...]
+   or: giacp      [-t|--title <title>] [files...]
+
+Positional Options:
+  files    file name
+
+Optional Options:
+  -t       title message 
+'''
+cp_usage = '''\
+Usage: git2nd cp [-t|--title <title>] [-a|--amend]
+   or: gicp      [-t|--title <title>] [-a|--amend]
+
+Optional Options:
+  -t    title message
+  -a    git commit --amend
+'''
+mp_usage = '''\
+Usage: git2nd mp [branch]
+   or: gimp      [branch]
+
+Positional Options:
+  branch   dest branch name ''' + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
+stash_usage = '''\
+Usage: git2nd stash
 '''
 
 def clone_routine():
-    clone_usage = '''\
-Usage: git2nd clone
-'''
     parser = mkparser(clone_usage)
     args = parser.parse_args()
     if args.help:
@@ -35,13 +166,6 @@ def status_func():
     shell('git status').call()
 
 def add_routine():
-    add_usage = '''\
-Usage: git2nd add [file...]
-   or: gia        [file...]
-
-Options:
-    file    file name
-'''
     parser = mkparser(add_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -66,15 +190,6 @@ def add_func(files):
     shell('git status').call()
 
 def commit_routine():
-    commit_usage = '''\
-Usage: git2nd commit [-a|--amend] (title)
-   or: gic           [-a|--amend] (title)
-
-options:
-  (None)        commit no title
-  -a|--amend    re_commit(git commit --amend)
-  title         add title auto
-'''
 
     parser = mkparser(commit_usage)
     #parser.add_argument('-t', '--title', dest='title')
@@ -130,10 +245,6 @@ def commit_func(amend=False, title=None):
         f.rm()
 
 def push_routine():
-    push_usage = '''\
-Usage: git2nd push
-   or: gip
-'''
     parser = mkparser(push_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -169,18 +280,6 @@ def push_func():
     print('')
 
 def branch_routine():
-    branch_usage = '''\
-Usage: git2nd branch [-d|--delete] [-D|--DELETE] (branch)
-   or: gib           [-d|--delete] [-D|--DELETE] (branch)
-
-Positional Options:
-  (None)    show branches
-  branch    change or create
-
-Optional Options:
-  -d        delete branch
-  -D        force delete branch
-'''
     #branch_args  = ['(None):print now branch', 'branch:make or change branch']
     parser = mkparser(branch_usage)
     parser.add_argument('-d', '--delete', dest='delete')
@@ -252,13 +351,6 @@ def branch_func(fmt='ret'):
     return branches
 
 def merge_routine():
-    merge_usage = '''\
-Usage: git2nd merge [branch]
-   or: gim          [branch]
-
-Optinos:
-  branch   branch name
-'''
     parser = mkparser(merge_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -298,16 +390,6 @@ def merge_func(now, to):
     out, err = shell('git checkout ' + now).linedata()
 
 def tag_routine():
-    tag_usage = '''\
-Usage: git2nd tag [-a] [-d] [name]
-
-Positional options:
-  name    tag name
-
-Optional options:
-  -a      git -a tag
-  -d      delete tag
-'''
     parser = mkparser(tag_usage)
     parser.add_argument('-a', action='store_true', dest='a')
     parser.add_argument('-d', action='store_true', dest='d')
@@ -345,13 +427,6 @@ def tag_func(tag, a_option=False, d_option=False):
         shell('git push origin --tags').call()
 
 def log_routine():
-    log_usage = '''\
-Usage: git2nd log [-v|--verbose]
-   or: gil        [-v|--verbose]
-
-Options:
-  -v    show verbose(show detail)
-'''
     parser = mkparser(log_usage)
     parser.add_argument('-v', '--verbose', action='store_true')
     if regex_gi.findall(argv[0]):
@@ -367,13 +442,6 @@ Options:
         shell('git log --decorate=short --oneline -3').call()
 
 def diff_routine():
-    diff_usage = '''\
-Usage: git2nd diff [file]
-   or: giff       [file]
-
-Options:
-  file    file name
-'''
     parser = mkparser(diff_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -389,16 +457,6 @@ Options:
         shell('git diff ' + args.args[0]).call()
 
 def ac_routine():
-    ac_usage = '''\
-Usage: git2nd ac [-t|--title <title>] [file]
-   or: giac      [-t|--title <title>] [file]
-
-Positional Options:
-  file    file name
-
-Optional Options:
-  -t      Add original title. If no this option, title is first file name.
-'''
     parser = mkparser(usage=ac_usage)
     parser.add_argument('-t', '--title', dest='title')
     if regex_gi.findall(argv[0]):
@@ -429,16 +487,6 @@ def ac_func(files, title=None):
         commit_func()
 
 def acp_routine():
-    acp_usage = '''\
-Usage: git2nd acp [-t|--title <title>] [files...]
-   or: giacp      [-t|--title <title>] [files...]
-
-Positional Options:
-  files    file name
-
-Optional Options:
-  -t       title message 
-'''
     parser = mkparser(acp_usage)
     parser.add_argument('-t', '--title', dest='title')
     if regex_gi.findall(argv[0]):
@@ -462,14 +510,6 @@ def acp_func(files, title=None):
     push_func()
 
 def cp_routine():
-    cp_usage = '''\
-Usage: git2nd cp [-t|--title <title>] [-a|--amend]
-   or: gicp      [-t|--title <title>] [-a|--amend]
-
-Optional Options:
-  -t    title message
-  -a    git commit --amend
-'''
     parser = mkparser(cp_usage)
     parser.add_argument('-t', '--title', dest='title')
     parser.add_argument('-a', '--amend', action='store_true')
@@ -508,12 +548,6 @@ def cp_func(amend=False, title=None):
 
 def mp_routine():
     branches = branch_func()
-    mp_usage = '''\
-Usage: git2nd mp [branch]
-   or: gimp      [branch]
-
-Positional Options:
-  branch   dest branch name ''' + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
 
     parser = mkparser(mp_usage)
     parser.add_argument('branch', choices=branches)
@@ -551,58 +585,20 @@ def mp_func(now, to):
     inf('checkout ' + now)
 
 def stash_routine():
-    stash_usage = '''\
-Usage: git2nd stash
-'''
     print('comming soon.')
 
 def main():
-    usage = '''\
-Usage: git2nd [clone] [s|status] [a|add] [c|commit]
-              [p|push] [b|branch] [m|merge] [t|tag]
-              [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
-
-SubCommands:
-  clone     easy clone
-  status    print status
-  add       git add
-  commit    git commit -m
-  push      git push origin now branch
-  branch    git branch and git checkout
-  merge     git merge command
-  tag       git tag , git tag -a
-  log       git log and git log --oneline
-  diff      git diff
-  stash     comming soon.
-  ac        git2nd add -> git2nd commit
-  cp        git2nd commit -> git2nd push
-  acp       git2nd ac -> git2nd push
-  mp        git2nd merge -> git2nd push
- 
-aliases:
-  gis       git2nd status
-  gia       git2nd add
-  gic       git2nd commit
-  gip       git2nd push
-  gib       git2nd branch
-  gil       git2nd log
-  giff      git2nd diff
-  giac      git2nd ac
-  gicp      git2nd cp
-  giacp     git2nd acp
-  gimp      git2nd mp
-    '''
 
     lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
-    parser = mkparser(usage, lst)
+    parser = mkparser(main_usage, lst)
 
     if argc < 2:
-        print(usage)
+        print(main_usage)
         exit()
     elif argv[1] in lst:
         args = parser.parse_args()
     else:
-        print(usage)
+        print(main_usage)
         exit()
 
     if args.command in ['status', 's']:
@@ -636,10 +632,10 @@ aliases:
     elif args.command == 'mp':
         mp_routine()
     elif args.help:
-        print(usage)
+        print(main_usage)
         exit()
     else:
-        print(usage)
+        print(main_usage)
         exit()
 
 if __name__ == '__main__':
