@@ -1,15 +1,16 @@
 from enert import *
-import re
+import re, os
 import __main__
 
 regex_gi = re.compile(r'(gi$|git2nd$)')
 
 main_usage = '''\
-Usage: git2nd [clone] [s|status] [a|add] [c|commit]
+Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit]
               [p|push] [b|branch] [m|merge] [t|tag]
               [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
 
 SubCommands:
+  init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
   clone     easy clone
   status    print status
   add       git add
@@ -39,6 +40,12 @@ aliases:
   giacp     git2nd acp
   gimp      git2nd mp
     '''
+init_usage = '''\
+Usage: git2nd init (url)
+
+Optional Options:
+  url    remote repository url
+'''
 clone_usage = '''\
 Usage: git2nd clone
 '''
@@ -147,6 +154,61 @@ def initialize():
     shell('git config --global diff.renames true').call()
     shell('git config --global merge.log true').call()
     shell('git config --global color.ui auto ').call()
+
+def init_func():
+    if not 'GIT_NAME' in os.environ:
+        print('you have to export \'GIT_NAME\'')
+        exit()
+    if not 'GIT_EMAIL' in os.environ:
+        print('you have to export \'GIT_EMAIL\'')
+        exit()
+    parser = mkparser(init_usage)
+    args = parser.parse_args(argv[2:])
+    if args.help:
+        print(init_usage)
+        exit()
+    shell('git init').call()
+    if len(args.args) > 0:
+        shell('git remote add origin ' + args.args[0]).call()
+    shell('git config --global diff.renames true').call()
+    shell('git config --global merge.log true').call()
+    shell('git config --global color.ui auto ').call()
+    shell('git config --global user.name "' + os.environ['GIT_NAME'] + '"').call()
+    shell('git config --global user.email "' + os.environ['GIT_EMAIL'] + '"').call()
+    shell('git config --global color.diff auto').call()
+    shell('git config --global color.status auto').call()
+    shell('git config --global color.branch auto').call()
+    shell('git config --global core.quotepath false').call()
+    f = fl('.gitattributes')
+    if not f.exist():
+        buf = '''\
+*.c diff=cpp
+*.h diff=cpp
+*.cpp diff=cpp
+*.hpp diff=cpp
+*.m diff=objc
+*.java diff=java
+*.html diff=html
+*.pl diff=perl
+*.pm diff=perl
+*.t diff=perl
+*.php diff=php
+*.py diff=python
+*.rb diff=ruby
+*.js diff=java
+'''
+        f.write(buf)
+    f = fl('.gitignore')
+    if not f.exist():
+        f.write('.gitignore\n')
+        f.add('.gitattributes\n')
+    else:
+        exist_flag = False
+        liendata = f.linedata()
+        if not '.gitignore' in linedata:
+            f.add('.gitignore\n')
+        if not '.gitattributes' in linedata:
+            f.add('.gitattributes\n')
 
 def clone_routine():
     initialize()
@@ -622,7 +684,7 @@ def stash_routine():
 
 def main():
     initialize()
-    lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -634,7 +696,9 @@ def main():
         print(main_usage)
         exit()
 
-    if args.command in ['status', 's']:
+    if args.command == 'init':
+        init_func()
+    elif args.command in ['status', 's']:
         status_func()
     elif args.command in ['add', 'a']:
         add_routine()
