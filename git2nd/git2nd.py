@@ -553,6 +553,7 @@ def stash_routine():
     stash_usage = '''\
 Usage: git2nd stash
 '''
+    print('comming soon.')
 
 def main():
     usage = '''\
@@ -571,6 +572,7 @@ SubCommands:
   tag       git tag , git tag -a
   log       git log and git log --oneline
   diff      git diff
+  stash     comming soon.
   ac        git2nd add -> git2nd commit
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
