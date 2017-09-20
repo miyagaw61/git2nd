@@ -272,3 +272,20 @@ Positional Options:
 作成中。
 
 comming soon.
+
+* return
+
+失敗した時に戻せる
+
+```
+Usage: git2nd return [head <file>] [add <file>] [commit --soft] [commit --hard]
+   or: gir           [head <file>] [add <file>] [commit --soft] [commit --hard]
+
+Options:
+  head             return to newest commit
+  add              return to before add 
+  commit --soft    return to before commit and keep changes
+  commit --hard    return to before commit and delete changes
+```
+
+![return](https://i.imgur.com/kZdK1fC.png)
