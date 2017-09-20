@@ -505,14 +505,14 @@ def log_routine():
         exit()
     elif args.verbose:
         if args.num:
-            shell('git log --graph --decorate=short -p -' + args.num).call()
+            shell('git log --decorate=short -p -' + args.num).call()
         else:
-            shell('git log --graph --decorate=short -p').call()
+            shell('git log --decorate=short -p').call()
     else:
         if args.num:
-            shell('git log --graph --decorate=short --oneline -' + args.num).call()
+            shell('git log --decorate=short --oneline -' + args.num).call()
         else:
-            shell('git log --graph --decorate=short --oneline -3').call()
+            shell('git log --decorate=short --oneline -3').call()
 
 
 def diff_routine():
