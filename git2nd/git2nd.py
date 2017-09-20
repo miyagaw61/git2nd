@@ -156,6 +156,16 @@ Positional Options:
 stash_usage = '''\
 Usage: git2nd stash
 '''
+return_usage = '''\
+Usage: git2nd return [head <file>] [add <file>] [commit --soft] [commit --hard]
+   or: gir             [head <file>] [add <file>] [commit --soft] [commit --hard]
+
+Options:
+  head             return to HEAD
+  add              return add
+  commit --soft    return commit soft
+  commit --hard    return commit hard
+'''
 
 def init_func():
     if not 'GIT_NAME' in os.environ:
@@ -703,8 +713,53 @@ def mp_func(now, to):
 def stash_routine():
     print('comming soon.')
 
+def return_routine():
+    lst = ['head', 'add', 'commit']
+    parser = mkparser(return_usage, lst)
+    if regex_gi.findall(argv[0]):
+        args = parser.parse_args(argv[2:])
+    else:
+        args = parser.parse_args(argv[1:])
+    if args.help:
+        print(return_usage)
+        exit()
+    elif args.command == 'head':
+        if len(args.args) < 1:
+            print(return_usage)
+            exit()
+        inf('return to HEAD \'' + args.args[0] + '\'')
+        shell('git checkout HEAD ' + args.args[0]).call()
+    elif args.command == 'add':
+        if len(args.args) < 1:
+            print(return_usage)
+            exit()
+        inf('return to before add \'' + args.args[0] + '\'')
+        shell('git reset HEAD ' + args.args[0]).call()
+    elif args.command == 'commit':
+        parser = mkparser(return_usage)
+        parser.add_argument('--soft', action='store_true')
+        parser.add_argument('--hard', action='store_true')
+        if regex_gi.findall(argv[0]):
+            args = parser.parse_args(argv[3:])
+        else:
+            args = parser.parse_args(argv[2:])
+        if args.soft:
+            inf('return to before commit and keep change')
+            shell('git reset --soft HEAD^').call()
+        elif args.hard:
+            inf('return to before commit and delete change')
+            shell('git reset --hard HEAD^').call()
+        else:
+            print(return_usage)
+            exit()
+    else:
+        print(return_usage)
+        exit()
+
+
+
 def main():
-    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -736,6 +791,8 @@ def main():
         log_routine()
     elif args.command in ['diff', 'd', 'f']:
         diff_routine()
+    elif args.command in ['return', 'r']:
+        return_routine()
     elif args.command == 'stash':
         stash_routine()
     elif args.command == 'clone':
