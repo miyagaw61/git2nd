@@ -99,11 +99,13 @@ Optional options:
   -d      delete tag
 '''
 log_usage = '''\
-Usage: git2nd log [-v|--verbose] [-n <num>]
-   or: gil        [-v|--verbose] [-n <num>]
+Usage: git2nd log [-g|--graph] [-v|--verbose] [-n <num>]
+   or: gil        [-g|--graph] [-v|--verbose] [-n <num>]
 
 Options:
   -v    show verbose(show detail)
+  -g    show graph log
+  -n    num
 '''
 diff_usage = '''\
 Usage: git2nd diff [..<repository>] [<repository>..] [-c <file>] [<file>] [head] [<SHA>]
