@@ -70,8 +70,8 @@ Usage: git2nd push
    or: gip
 '''
 branch_usage = '''\
-Usage: git2nd branch [-d|--delete] [-D|--DELETE] (branch)
-   or: gib           [-d|--delete] [-D|--DELETE] (branch)
+Usage: git2nd branch [-d|--delete] [-D|--DELETE] [-r|--remote-push] (branch)
+   or: gib           [-d|--delete] [-D|--DELETE] [-r|--remote-push] (branch)
 
 Positional Options:
   (None)    show branches
@@ -353,6 +353,7 @@ def branch_routine():
     parser = mkparser(branch_usage)
     parser.add_argument('-d', '--delete', dest='delete')
     parser.add_argument('-D', '--DELETE', dest='force')
+    parser.add_argument('-r', '--remote-push', dest='remote')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -377,6 +378,10 @@ def branch_routine():
                 print(red(x))
         else:
             inf('delete ' + args.force)
+        branch_func('out')
+    elif args.remote:
+        inf('push ' + args.remote)
+        shell('git push origin :' + args.remote).call()
         branch_func('out')
     else:
         branches = branch_func()
