@@ -157,14 +157,14 @@ stash_usage = '''\
 Usage: git2nd stash
 '''
 return_usage = '''\
-Usage: git2nd return [head <file>] [add <file>] [commit --soft] [commit --hard]
-   or: gir           [head <file>] [add <file>] [commit --soft] [commit --hard]
+Usage: git2nd return [head <file>] [add <file>] [commit] [commit --hard]
+   or: gir           [head <file>] [add <file>] [commit] [commit --hard]
 
 Options:
-  head             return to newest commit
-  add              return to before add 
-  commit --soft    return to before commit and keep changes
-  commit --hard    return to before commit and delete changes
+  head           return to newest commit
+  add            return to before add 
+  commit         return to before commit and keep changes
+  commit --hard  return to before commit and delete changes
 '''
 
 def init_func():
@@ -714,7 +714,7 @@ def stash_routine():
     print('comming soon.')
 
 def return_routine():
-    lst = ['head', 'add', 'commit']
+    lst = ['head', 'h', 'add', 'a', 'commit', 'c']
     parser = mkparser(return_usage, lst)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -723,27 +723,26 @@ def return_routine():
     if args.help:
         print(return_usage)
         exit()
-    elif args.command == 'head':
+    elif args.command == 'head' or args.command == 'h':
         if len(args.args) < 1:
             print(return_usage)
             exit()
         inf('return to newest commit \'' + args.args[0] + '\'')
         shell('git checkout HEAD ' + args.args[0]).call()
-    elif args.command == 'add':
+    elif args.command == 'add' or args.command == 'a':
         if len(args.args) < 1:
             print(return_usage)
             exit()
         inf('return to before add \'' + args.args[0] + '\'')
         shell('git reset HEAD ' + args.args[0]).call()
-    elif args.command == 'commit':
+    elif args.command == 'commit' or args.command == 'c':
         parser = mkparser(return_usage)
-        parser.add_argument('--soft', action='store_true')
         parser.add_argument('--hard', action='store_true')
         if regex_gi.findall(argv[0]):
             args = parser.parse_args(argv[3:])
         else:
             args = parser.parse_args(argv[2:])
-        if args.soft:
+        if not args.hard:
             inf('return to before commit and keep change')
             shell('git reset --soft HEAD^').call()
         elif args.hard:
