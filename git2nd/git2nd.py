@@ -164,7 +164,7 @@ def status_func():
     print('='*size_x)
     os.system('ls --color=auto')
     print('='*size_x)
-    shell('git status').call()
+    shell('git status --short').call()
 
 def add_routine():
     parser = mkparser(add_usage)
@@ -188,7 +188,7 @@ def add_func(files):
             shell('git add ' + x).call()
     else:
         shell('git add ' + files).call()
-    shell('git status').call()
+    shell('git status --short').call()
 
 def commit_routine():
 
@@ -451,6 +451,7 @@ def log_routine():
 
 def diff_routine():
     parser = mkparser(diff_usage)
+    parser.add_argument('-r', '--remote', dest='remote')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -461,6 +462,8 @@ def diff_routine():
     elif len(args.args) < 1:
         print(diff_usage)
         exit()
+    elif args.remote:
+        shell('git diff HEAD..origin/' + args.remote).call()
     else:
         shell('git diff ' + args.args[0]).call()
 
