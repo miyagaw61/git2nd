@@ -143,7 +143,13 @@ stash_usage = '''\
 Usage: git2nd stash
 '''
 
+def initialize():
+    shell('git config --global diff.renames true').call()
+    shell('git config --global merge.log true').call()
+    shell('git config --global color.ui auto ').call()
+
 def clone_routine():
+    initialize()
     parser = mkparser(clone_usage)
     args = parser.parse_args()
     if args.help:
@@ -157,6 +163,7 @@ def clone_routine():
         shell('git clone https://github.com/' + user_name + '/' + repository_name + ' ' + dest_dir).call()
 
 def status_func():
+    initialize()
     if shell('git branch').linedata()[0]:
         branches = branch_func()
         print(green('now: ' + branches[0], 'bold'))
@@ -167,6 +174,7 @@ def status_func():
     shell('git status --short').call()
 
 def add_routine():
+    initialize()
     parser = mkparser(add_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -191,7 +199,7 @@ def add_func(files):
     shell('git status --short').call()
 
 def commit_routine():
-
+    initialize()
     parser = mkparser(commit_usage)
     #parser.add_argument('-t', '--title', dest='title')
     parser.add_argument('-a', '--amend', action='store_true')
@@ -246,6 +254,7 @@ def commit_func(amend=False, title=None):
         f.rm()
 
 def push_routine():
+    initialize()
     parser = mkparser(push_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -281,6 +290,7 @@ def push_func():
     print('')
 
 def branch_routine():
+    initialize()
     #branch_args  = ['(None):print now branch', 'branch:make or change branch']
     parser = mkparser(branch_usage)
     parser.add_argument('-d', '--delete', dest='delete')
@@ -328,6 +338,7 @@ def branch_routine():
             branch_func('out')
 
 def branch_func(fmt='ret'):
+    initialize()
     """
     branch_func(type='ret') # return_value[0] == now branch
     branch_func(type='out')
@@ -352,6 +363,7 @@ def branch_func(fmt='ret'):
     return branches
 
 def merge_routine():
+    initialize()
     parser = mkparser(merge_usage)
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -377,7 +389,6 @@ def merge_func(now, to):
     """
     merge_func(str to)
     """
-    shell('git config --global merge.log true').call()
     out, err = shell('git checkout ' + to).linedata()
     inf('merge ' + blue(now, 'bold') + red(' -> ', 'bold') + blue(to, 'bold'))
     shell('git merge ' + now + ' 2> /tmp/.git2nd.tmp').call()
@@ -391,6 +402,7 @@ def merge_func(now, to):
     out, err = shell('git checkout ' + now).linedata()
 
 def tag_routine():
+    initialize()
     parser = mkparser(tag_usage)
     parser.add_argument('-a', action='store_true', dest='a')
     parser.add_argument('-d', action='store_true', dest='d')
@@ -428,6 +440,7 @@ def tag_func(tag, a_option=False, d_option=False):
         shell('git push origin --tags').call()
 
 def log_routine():
+    initialize()
     parser = mkparser(log_usage)
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-n', dest='num')
@@ -450,6 +463,7 @@ def log_routine():
             shell('git log --graph --decorate=short --oneline -3').call()
 
 def diff_routine():
+    initialize()
     parser = mkparser(diff_usage)
     parser.add_argument('-r', '--remote', dest='remote')
     if regex_gi.findall(argv[0]):
@@ -603,10 +617,11 @@ def mp_func(now, to):
     inf('checkout ' + now)
 
 def stash_routine():
+    initialize()
     print('comming soon.')
 
 def main():
-
+    initialize()
     lst = ['status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(main_usage, lst)
 
