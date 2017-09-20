@@ -495,6 +495,7 @@ def tag_func(tag, a_option=False, d_option=False):
 def log_routine():
     parser = mkparser(log_usage)
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-g', '--graph', action='store_true')
     parser.add_argument('-n', dest='num')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
@@ -503,16 +504,28 @@ def log_routine():
     if args.help:
         print(log_usage)
         exit()
-    elif args.verbose:
-        if args.num:
-            shell('git log --decorate=short -p -' + args.num).call()
+    if args.graph:
+        if args.verbose:
+            if args.num:
+                shell('git log --graph --decorate=short -p -' + args.num).call()
+            else:
+                shell('git log --graph --decorate=short -p').call()
         else:
-            shell('git log --decorate=short -p').call()
+            if args.num:
+                shell('git log --graph --decorate=short --oneline -' + args.num).call()
+            else:
+                shell('git log --graph --decorate=short --oneline -3').call()
     else:
-        if args.num:
-            shell('git log --decorate=short --oneline -' + args.num).call()
+        if args.verbose:
+            if args.num:
+                shell('git log --decorate=short -p -' + args.num).call()
+            else:
+                shell('git log --decorate=short -p').call()
         else:
-            shell('git log --decorate=short --oneline -3').call()
+            if args.num:
+                shell('git log --decorate=short --oneline -' + args.num).call()
+            else:
+                shell('git log --decorate=short --oneline -3').call()
 
 
 def diff_routine():
