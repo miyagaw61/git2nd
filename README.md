@@ -42,7 +42,7 @@ SubCommands:
   mp        git2nd merge -> git2nd push
   stash     作成中 comming soon
  
-aliaces:
+aliases:
   gis       git2nd status
   gia       git2nd add
   gic       git2nd commit

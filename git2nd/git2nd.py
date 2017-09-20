@@ -567,7 +567,7 @@ SubCommands:
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
  
-aliaces:
+aliases:
   gis       git2nd status
   gia       git2nd add
   gic       git2nd commit
