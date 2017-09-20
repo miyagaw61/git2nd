@@ -42,7 +42,7 @@ SubCommands:
   mp        git2nd merge -> git2nd push
   stash     作成中 comming soon
  
-aliaces:
+aliases:
   gis       git2nd status
   gia       git2nd add
   gic       git2nd commit
@@ -100,6 +100,9 @@ options:
 
 > title sed
 > > * u foobar -> [update]title : foobar
+
+> editor selct
+> > * (bash)export EDITOR='nano'
 
 ![commit1](https://i.imgur.com/TOHDPMP.png)
 ![commit2](https://i.imgur.com/VxR0qz6.png)

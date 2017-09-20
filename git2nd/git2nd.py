@@ -284,6 +284,7 @@ def merge_func(now, to):
     """
     merge_func(str to)
     """
+    shell('git config --global merge.log true').call()
     out, err = shell('git checkout ' + to).linedata()
     inf('merge ' + blue(now, 'bold') + red(' -> ', 'bold') + blue(to, 'bold'))
     shell('git merge ' + now + ' 2> /tmp/.git2nd.tmp').call()
@@ -553,6 +554,7 @@ def stash_routine():
     stash_usage = '''\
 Usage: git2nd stash
 '''
+    print('comming soon.')
 
 def main():
     usage = '''\
@@ -571,12 +573,13 @@ SubCommands:
   tag       git tag , git tag -a
   log       git log and git log --oneline
   diff      git diff
+  stash     comming soon.
   ac        git2nd add -> git2nd commit
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
  
-aliaces:
+aliases:
   gis       git2nd status
   gia       git2nd add
   gic       git2nd commit
