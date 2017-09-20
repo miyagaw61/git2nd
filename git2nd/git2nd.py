@@ -1,5 +1,6 @@
 from enert import *
 import re
+import __main__
 
 regex_gi = re.compile(r'(gi$|git2nd$)')
 
@@ -554,13 +555,16 @@ def cp_func(amend=False, title=None):
         push_func()
 
 def mp_routine():
-    mp_usage = mp_usage + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
     branches = branch_func()
+    __main__.mp_usage = mp_usage + '{' + ','.join(branches[1:]) + '} (now: ' + branches[0] + ')'
 
     parser = mkparser(mp_usage)
     parser.add_argument('branch', choices=branches)
     if regex_gi.findall(argv[0]):
-        if argv[2] == 'm':
+        if argc < 3:
+            print(mp_usage)
+            exit()
+        elif argv[2] == 'm':
             lst = ['master']
         elif argv[2] == 'd':
             lst = ['develop']
@@ -568,7 +572,10 @@ def mp_routine():
             lst = argv[2:]
         args = parser.parse_args(lst)
     else:
-        if argv[1] == 'm':
+        if argc < 2:
+            print(mp_usage)
+            exit()
+        elif argv[1] == 'm':
             lst = ['master']
         elif argv[1] == 'd':
             lst = ['develop']
