@@ -288,4 +288,5 @@ Options:
   commit --hard    return to before commit and delete changes
 ```
 
-![return](https://i.imgur.com/kZdK1fC.png)
+![return1](https://i.imgur.com/56stKTP.png)
+![return2](https://i.imgur.com/6wFbA8A.png)
