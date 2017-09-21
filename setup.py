@@ -13,6 +13,7 @@ console_scripts = [
         'giff=git2nd.git2nd:diff_routine',
         'gif=git2nd.git2nd:diff_routine',
         'gir=git2nd.git2nd:return_routine',
+        'giv=git2nd.git2nd:vim_routine',
         'giac=git2nd.git2nd:ac_routine',
         'giacp=git2nd.git2nd:acp_routine',
         'gicp=git2nd.git2nd:cp_routine',

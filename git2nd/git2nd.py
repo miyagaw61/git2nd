@@ -21,6 +21,7 @@ SubCommands:
   tag       git tag , git tag -a
   log       git log and git log --oneline
   diff      git diff
+  vim       vim commit message memo
   stash     comming soon.
   ac        git2nd add -> git2nd commit
   cp        git2nd commit -> git2nd push
@@ -33,8 +34,11 @@ aliases:
   gic       git2nd commit
   gip       git2nd push
   gib       git2nd branch
+  gim       git2nd merge
   gil       git2nd log
   giff      git2nd diff
+  gir       git2nd return
+  giv       git2nd vim
   giac      git2nd ac
   gicp      git2nd cp
   giacp     git2nd acp
@@ -165,6 +169,10 @@ Options:
   add            return to before add 
   commit         return to before commit and keep changes
   commit --hard  return to before commit and delete changes
+'''
+vim_usage = '''\
+Usage: git2nd vim
+   or: giv
 '''
 
 def init_func():
@@ -755,10 +763,14 @@ def return_routine():
         print(return_usage)
         exit()
 
-
+def vim_routine():
+    if '-h' in argv:
+        print(vim_usage)
+    else:
+        fl('/tmp/.git2nd.tmp').edit()
 
 def main():
-    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'vim', 'v', 'clone', 'ac', 'cp', 'acp', 'mp']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -792,6 +804,8 @@ def main():
         diff_routine()
     elif args.command in ['return', 'r']:
         return_routine()
+    elif args.command in ['vim', 'v']:
+        vim_routine()
     elif args.command == 'stash':
         stash_routine()
     elif args.command == 'clone':
