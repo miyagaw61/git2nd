@@ -112,14 +112,15 @@ Options:
   -n    num
 '''
 diff_usage = '''\
-Usage: git2nd diff [..<repository>] [<repository>..] [-c <file>] [<file>] [head] [<SHA>]
-   or: giff        [..<repository>] [<repository>..] [-c <file>] [<file>] [head] [<SHA>]
+Usage: git2nd diff [..<repository>] [<repository>..] [-c <file>] [-w|--word <file>] [<file>] [head] [<SHA>]
+   or: giff        [..<repository>] [<repository>..] [-c <file>] [-w|--word <file>] [<file>] [head] [<SHA>]
 
 Options:
   ..[repository]    HEAD -> repository (before pull)
   [repository]..    repository -> HEAD (before push)
   file              file -> INDEX (before add)
   -c [file]         HEAD -> INDEX (before commit)
+  -w [file]         --color-words
   head              HEAD commit diff
   SHA               SHA num (7)
 '''
@@ -177,11 +178,15 @@ Usage: git2nd vim
 
 def init_func():
     if not 'GIT_NAME' in os.environ:
-        print('you have to export \'GIT_NAME\'')
-        exit()
+        print("[+]you don't have $GIT_NAME. if you have it, 'git config --global user.name'")
+    else:
+        shell('git config --global user.name "' + os.environ['GIT_NAME'] + '"').call()
     if not 'GIT_EMAIL' in os.environ:
-        print('you have to export \'GIT_EMAIL\'')
-        exit()
+        print("[+]you don't have $GIT_EMAIL. if you have it, 'git config --global user.email'")
+    else:
+        shell('git config --global user.email "' + os.environ['GIT_EMAIL'] + '"').call()
+    if fl(".git").exist():
+        print("[+].git is exsisted but Reinit is safe.")
     parser = mkparser(init_usage)
     args = parser.parse_args(argv[2:])
     if args.help:
@@ -193,8 +198,6 @@ def init_func():
     shell('git config --global diff.renames true').call()
     shell('git config --global merge.log true').call()
     shell('git config --global color.ui auto ').call()
-    shell('git config --global user.name "' + os.environ['GIT_NAME'] + '"').call()
-    shell('git config --global user.email "' + os.environ['GIT_EMAIL'] + '"').call()
     shell('git config --global color.diff auto').call()
     shell('git config --global color.status auto').call()
     shell('git config --global color.branch auto').call()
@@ -556,32 +559,33 @@ def log_routine():
 def diff_routine():
     parser = mkparser(diff_usage)
     parser.add_argument('-c', '--commit', action='store_true')
+    parser.add_argument('-w', '--word', action='store_true')
     regex_sha = re.compile(r'[0123456789abcdef]{7}')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
         args = parser.parse_args(argv[1:])
-    if args.help:
-        print(diff_usage)
-        exit()
-    elif len(args.args) < 1:
+    word = " "
+    if args.word:
+        word = " --color-words "
+    if args.help or len(args.args) < 1:
         print(diff_usage)
         exit()
     elif args.commit:
-        shell('git diff --color-words --cached ' + args.args[0]).call()
+        shell("git diff" + word + "--cached " + args.args[0]).call()
     elif args.args[0].count('..') > 0:
         regex_head = re.compile(r'\.\.')
         repository = regex_head.sub('', args.args[0])
         if args.args[0][0] == '.':
-            shell('git diff --color-words HEAD..origin/' + repository).call()
+            shell("git diff" + word + " HEAD..origin/" + repository).call()
         elif args.args[0][-1] == '.':
-            shell('git diff --color-words origin/' + repository + '..HEAD').call()
+            shell("git diff" + word + "origin/" + repository + "..HEAD").call()
     elif args.args[0] == 'head' or args.args[0] == 'h':
-        shell('git diff --color-words HEAD^').call()
+        shell("git diff" + word + "HEAD^").call()
     elif regex_sha.findall(args.args[0]):
-        shell('git diff --color-words ' + args.args[0] + '^..' + args.args[0]).call()
+        shell("git diff" + word + args.args[0] + "^.." + args.args[0]).call()
     else:
-        shell('git diff --color-words ' + args.args[0]).call()
+        shell("git diff" + word + args.args[0]).call()
 
 def ac_routine():
     parser = mkparser(usage=ac_usage)
