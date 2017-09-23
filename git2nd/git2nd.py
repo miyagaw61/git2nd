@@ -164,14 +164,15 @@ stash_usage = '''\
 Usage: git2nd stash
 '''
 return_usage = '''\
-Usage: git2nd return [head <file>] [add <file>] [commit] [commit --hard]
-   or: gir           [head <file>] [add <file>] [commit] [commit --hard]
+Usage: git2nd return [head <file>] [add <file>] [commit] [commit --hard] [commit <SHA>]
+   or: gir           [head <file>] [add <file>] [commit] [commit --hard] [commit <SHA>]
 
 Options:
   head           return to newest commit
   add            return to before add 
   commit         return to before commit and keep changes
   commit --hard  return to before commit and delete changes
+  commit [SHA]   return to SHA commit
 '''
 vim_usage = '''\
 Usage: git2nd vim
@@ -756,7 +757,10 @@ def return_routine():
             args = parser.parse_args(argv[3:])
         else:
             args = parser.parse_args(argv[2:])
-        if not args.hard:
+        if len(args.args) > 0:
+            inf("return to commit '" + args.args[0] + "'")
+            shell("git checkout " + args.args[0]).call()
+        elif not args.hard:
             inf('return to before commit and keep change')
             shell('git reset --soft HEAD^').call()
         elif args.hard:
