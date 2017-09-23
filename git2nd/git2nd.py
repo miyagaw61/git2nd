@@ -7,9 +7,9 @@ import better_exceptions
 regex_gi = re.compile(r'(gi$|git2nd$)')
 
 main_usage = '''\
-Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit]
-              [p|push] [b|branch] [m|merge] [t|tag]
-              [l|log] [d|f|diff] [ac] [cp] [acp] [mp]
+Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit] [p|push]
+              [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff]
+              [r|return] [v|vim] [ac] [cp] [acp] [mp]
 
 SubCommands:
   init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
@@ -23,6 +23,7 @@ SubCommands:
   tag       git tag , git tag -a
   log       git log and git log --oneline
   diff      git diff
+  return    return to [newest commit/before add/before commit/SHA]
   vim       vim commit message memo
   stash     comming soon.
   ac        git2nd add -> git2nd commit
