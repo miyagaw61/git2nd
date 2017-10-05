@@ -306,6 +306,7 @@ def commit_routine():
         commit_func()
 
 def commit_func(amend=False, title=None):
+    regex_dq = re.compile(r'"')
     if amend:
         inf('commit --amend')
         shell('git commit --amend').call()
@@ -316,6 +317,7 @@ def commit_func(amend=False, title=None):
             shell('touch /tmp/.git2nd.tmp').call()
         f.edit()
         data = f.data()
+        data = regex_dq.sub(r'\"', data)
         if len(data) == 0:
             print(red('commit message is None'))
             exit()
