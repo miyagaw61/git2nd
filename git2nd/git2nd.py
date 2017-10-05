@@ -2,6 +2,7 @@ from enert import *
 from enert.argparse import *
 import re, os
 import __main__
+import better_exceptions
 
 regex_gi = re.compile(r'(gi$|git2nd$)')
 

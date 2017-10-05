@@ -27,7 +27,7 @@ setup(
     description='git2nd',
     author='Taisei Miyagawa @miyagaw61',
     author_email='miyagaw61@gmail.com',
-    install_requires=['enert==0.0.2'],
+    install_requires=['enert==0.0.2', 'better_exceptions'],
     dependency_links=['git+https://github.com/miyagaw61/enert.git#egg=enert-0.0.2'],
     entry_points = {'console_scripts': console_scripts},
     url='https://github.com/miyagaw61/git2nd',
