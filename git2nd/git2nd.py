@@ -206,6 +206,7 @@ def init_func():
     shell('git config --global color.status auto').call()
     shell('git config --global color.branch auto').call()
     shell('git config --global core.quotepath false').call()
+    Shell('git config core.filemode false').call()
     f = fl('.gitattributes')
     if not f.exist():
         buf = '''\
