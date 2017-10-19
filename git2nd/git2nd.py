@@ -389,7 +389,7 @@ def branch_routine():
     if args.help:
         print(branch_usage)
         exit()
-    elif len(args.args) == 0 and not args.delete and not args.force:
+    elif len(args.args) == 0 and not args.delete and not args.force and not args.remote:
         branch_func('out')
     elif args.delete:
         out, err = shell('git branch -d ' + args.delete).linedata()
@@ -531,7 +531,7 @@ def log_routine():
     parser = mkparser(log_usage)
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-g', '--graph', action='store_true')
-    parser.add_argument('-n', dest='num')
+    #parser.add_argument('-n', dest='num')
     if regex_gi.findall(argv[0]):
         args = parser.parse_args(argv[2:])
     else:
@@ -541,24 +541,24 @@ def log_routine():
         exit()
     if args.graph:
         if args.verbose:
-            if args.num:
-                shell('git log --graph --decorate=short -p -' + args.num).call()
+            if len(args.args) > 0:
+                shell('git log --graph -p --decorate=short -' + args.args[0]).call()
             else:
-                shell('git log --graph --decorate=short -p').call()
+                shell('git log --graph -p --decorate=short').call()
         else:
-            if args.num:
-                shell('git log --graph --decorate=short --oneline -' + args.num).call()
+            if len(args.args) > 0:
+                shell('git log --graph --decorate=short --oneline -' + args.args[0]).call()
             else:
                 shell('git log --graph --decorate=short --oneline -3').call()
     else:
         if args.verbose:
-            if args.num:
-                shell('git log --decorate=short -p -' + args.num).call()
+            if len(args.args) > 0:
+                shell('git log -p --decorate=short -' + args.args[0]).call()
             else:
-                shell('git log --decorate=short -p').call()
+                shell('git log -p --decorate=short -3').call()
         else:
-            if args.num:
-                shell('git log --decorate=short --oneline -' + args.num).call()
+            if len(args.args) > 0:
+                shell('git log --oneline --decorate=short -' + args.args[0]).call()
             else:
                 shell('git log --decorate=short --oneline -3').call()
 
