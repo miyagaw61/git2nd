@@ -1,5 +1,5 @@
 from enert import *
-from enert.argparse import *
+from argparse import *
 import re, os
 import __main__
 import better_exceptions
@@ -9,7 +9,7 @@ regex_gi = re.compile(r'(gi$|git2nd$)')
 main_usage = '''\
 Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit] [p|push]
               [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff]
-              [r|return] [v|vim] [ac] [cp] [acp] [mp]
+              [r|return] [v|vim] [ac] [cp] [acp] [mp] [tmp]
 
 SubCommands:
   init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
@@ -30,6 +30,7 @@ SubCommands:
   cp        git2nd commit -> git2nd push
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
+  tmp       tmp commit
  
 aliases:
   gis       git2nd status
@@ -46,6 +47,7 @@ aliases:
   gicp      git2nd cp
   giacp     git2nd acp
   gimp      git2nd mp
+  gitmp     git2nd tmp
     '''
 init_usage = '''\
 Usage: git2nd init (url)
@@ -178,6 +180,10 @@ Options:
 vim_usage = '''\
 Usage: git2nd vim
    or: giv
+'''
+tmp_usage = '''\
+Usage: git2nd tmp
+   or: gitmp
 '''
 
 def init_func():
@@ -783,8 +789,21 @@ def vim_routine():
     else:
         fl('/tmp/.git2nd.tmp').edit()
 
+def tmp_routine():
+    parser = mkparser(tmp_usage)
+    if regex_gi.findall(argv[0]):
+        args = parser.parse_args(argv[2:])
+    else:
+        args = parser.parse_args(argv[1:])
+    if args.help:
+        print(tmp_usage)
+        exit()
+    else:
+        Shell('git add .').call()
+        Shell('git commit -m "tmp"').call()
+
 def main():
-    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'vim', 'v', 'clone', 'ac', 'cp', 'acp', 'mp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'vim', 'v', 'clone', 'ac', 'cp', 'acp', 'mp', 'tmp']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -832,6 +851,8 @@ def main():
         cp_routine()
     elif args.command == 'mp':
         mp_routine()
+    elif args.command == 'tmp':
+        tmp_routine()
     elif args.help:
         print(main_usage)
         exit()

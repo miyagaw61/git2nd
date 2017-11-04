@@ -17,7 +17,8 @@ console_scripts = [
         'giac=git2nd.git2nd:ac_routine',
         'giacp=git2nd.git2nd:acp_routine',
         'gicp=git2nd.git2nd:cp_routine',
-        'gimp=git2nd.git2nd:mp_routine'
+        'gimp=git2nd.git2nd:mp_routine',
+        'gitmp=git2nd.git2nd:tmp_routine',
         ]
 
 setup(
