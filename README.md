@@ -9,12 +9,8 @@ This is very easy to use git.
 
 ## Install
 
-※/path/to is any directory
-
 ```bash
-git clone https://github.com/miyagaw61/git2nd /path/to/git2nd
-cd /path/to/git2nd
-python setup.py install
+pip install git+https://github.com/miyagaw61/git2nd --process-dependency-links
 ```
 
 ## Usage
