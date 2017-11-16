@@ -258,9 +258,6 @@ def clone_routine():
         shell('git clone https://github.com/' + user_name + '/' + repository_name + ' ' + dest_dir).call()
 
 def status_func():
-    if shell('git branch').linedata()[0]:
-        branches = branch_func()
-        print(green('now: ' + branches[0], 'bold'))
     size_y, size_x = get_term_size()
     print('='*size_x)
     os.system('ls --color=auto')
