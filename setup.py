@@ -19,6 +19,7 @@ console_scripts = [
         'gicp=git2nd.git2nd:cp_routine',
         'gimp=git2nd.git2nd:mp_routine',
         'gitmp=git2nd.git2nd:tmp_routine',
+        'gipl=git2nd.git2nd:pull_routine',
         ]
 
 setup(

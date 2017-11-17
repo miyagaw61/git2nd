@@ -9,7 +9,7 @@ regex_gi = re.compile(r'(gi$|git2nd$)')
 main_usage = '''\
 Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit] [p|push]
               [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff]
-              [r|return] [v|vim] [ac] [cp] [acp] [mp] [tmp]
+              [r|return] [v|vim] [ac] [cp] [acp] [mp] [tmp] [pl|pull]
 
 SubCommands:
   init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
@@ -31,6 +31,7 @@ SubCommands:
   acp       git2nd ac -> git2nd push
   mp        git2nd merge -> git2nd push
   tmp       tmp commit
+  pull      pull --rebase origin now branch
  
 aliases:
   gis       git2nd status
@@ -48,6 +49,7 @@ aliases:
   giacp     git2nd acp
   gimp      git2nd mp
   gitmp     git2nd tmp
+  gipl      git2nd pull
     '''
 init_usage = '''\
 Usage: git2nd init (url)
@@ -186,6 +188,10 @@ Usage: git2nd tmp
    or: gitmp
 '''
 
+pull_usage = '''\
+Usage: git2nd pull
+   or: gipl
+'''
 def init_func():
     if not 'GIT_NAME' in os.environ:
         print("[+]you don't have $GIT_NAME. if you have it, 'git config --global user.name'")
@@ -799,8 +805,24 @@ def tmp_routine():
         Shell('git add .').call()
         Shell('git commit -m "tmp"').call()
 
+def pull_routine():
+    parser = mkparser(pull_usage)
+    if regex_gi.findall(argv[0]):
+        args = parser.parse_args(argv[2:])
+    else:
+        args = parser.parse_args(argv[1:])
+    if args.help:
+        print(tmp_usage)
+        exit()
+    else:
+        pull_func()
+
+def pull_func():
+    branch = branch_func()[0]
+    Shell(f'git pull --rebase origin {branch}').call()
+
 def main():
-    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'vim', 'v', 'clone', 'ac', 'cp', 'acp', 'mp', 'tmp']
+    lst = ['init', 'status', 's', 'add', 'a', 'commit', 'c', 'push', 'p', 'branch', 'b', 'merge', 'm', 'tag', 't', 'log', 'l', 'diff', 'return', 'r', 'stash', 'd', 'f', 'vim', 'v', 'clone', 'ac', 'cp', 'acp', 'mp', 'tmp', 'pull', 'pl']
     parser = mkparser(main_usage, lst)
 
     if argc < 2:
@@ -850,6 +872,8 @@ def main():
         mp_routine()
     elif args.command == 'tmp':
         tmp_routine()
+    elif args.command in ['pull', 'pl']:
+        pull_routine()
     elif args.help:
         print(main_usage)
         exit()
