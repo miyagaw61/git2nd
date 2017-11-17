@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 console_scripts = [
         'git2nd=git2nd.git2nd:main',
         'gi=git2nd.git2nd:main',
-        'gis=git2nd.git2nd:status_func',
+        'gis=git2nd.git2nd:status_routine',
         'gia=git2nd.git2nd:add_routine',
         'gic=git2nd.git2nd:commit_routine',
         'gip=git2nd.git2nd:push_routine',
@@ -20,6 +20,7 @@ console_scripts = [
         'gimp=git2nd.git2nd:mp_routine',
         'gitmp=git2nd.git2nd:tmp_routine',
         'gipl=git2nd.git2nd:pull_routine',
+        'gimvch=git2nd.git2nd:mvch_routine',
         ]
 
 setup(

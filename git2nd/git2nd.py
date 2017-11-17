@@ -8,8 +8,8 @@ regex_gi = re.compile(r'(gi$|git2nd$)')
 
 main_usage = '''\
 Usage: git2nd [init] [clone] [s|status] [a|add] [c|commit] [p|push]
-              [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff]
-              [r|return] [v|vim] [ac] [cp] [acp] [mp] [tmp] [pl|pull]
+              [b|branch] [m|merge] [t|tag] [l|log] [d|f|diff] [r|return]
+              [v|vim] [ac] [cp] [acp] [mp] [tmp] [pl|pull]
 
 SubCommands:
   init      all initialize (you have to export 'GIT_NAME' and 'GIT_EMAIL')
@@ -192,6 +192,7 @@ pull_usage = '''\
 Usage: git2nd pull
    or: gipl
 '''
+
 def init_func():
     if not 'GIT_NAME' in os.environ:
         print("[+]you don't have $GIT_NAME. if you have it, 'git config --global user.name'")
@@ -263,12 +264,20 @@ def clone_routine():
         inf('git clone https://github.com/' + user_name + '/' + repository_name + ' ' + dest_dir)
         shell('git clone https://github.com/' + user_name + '/' + repository_name + ' ' + dest_dir).call()
 
+def status_routine():
+    status_func()
+
 def status_func():
     size_y, size_x = get_term_size()
     print('='*size_x)
-    os.system('ls --color=auto')
+    Shell('ls --color=auto').call()
     print('='*size_x)
-    shell('git status --short').call()
+    Shell('git status --short').call()
+    out, _ = Shell('git status --short').readlines()
+    ret = []
+    for i in range(len(out)):
+        ret.append(ogrep(out[i], '.* (.*)$')[0]) 
+    return ret
 
 def add_routine():
     parser = mkparser(add_usage)
@@ -812,7 +821,7 @@ def pull_routine():
     else:
         args = parser.parse_args(argv[1:])
     if args.help:
-        print(tmp_usage)
+        print(pull_usage)
         exit()
     else:
         pull_func()
@@ -837,7 +846,7 @@ def main():
     if args.command == 'init':
         init_func()
     elif args.command in ['status', 's']:
-        status_func()
+        status_routine()
     elif args.command in ['add', 'a']:
         add_routine()
     elif args.command in ['commit', 'c']:
@@ -883,3 +892,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
