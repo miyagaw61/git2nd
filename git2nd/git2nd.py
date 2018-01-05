@@ -334,7 +334,8 @@ def commit_func(amend=False, title=None):
         f = fl('/tmp/.git2nd.tmp')
         if not f.exist():
             shell('touch /tmp/.git2nd.tmp').call()
-        f.edit()
+        #f.edit()
+        shell('nvr -c "e /tmp/.git2nd.tmp"').call() #new
         data = f.data()
         data = regex_dq.sub(r'\"', data)
         if len(data) == 0:
@@ -353,6 +354,7 @@ def commit_func(amend=False, title=None):
             data = re.compile(r'(^b |^b$)').sub('[bugfix]' + title + ' : ', data)
             data = re.compile(r'(^d |^d$)').sub('[delete]' + title + ' : ', data)
         stdout, stderr = shell('git commit -m "' + data + '"').linedata()
+        shell('rm -rf /tmp/.git2nd.tmp').call() #new
         inf('commit')
         for x in stderr:
             print(red(x, 'bold'))
