@@ -5,7 +5,12 @@
 
 This is very easy to use git.
 
+
 ![git2nd](https://i.imgur.com/o0PdcOa.png)
+
+# rusgitに移行しました。rusgitを使用してください。
+
+https://github.com/miyagaw61/rusgit
 
 ## Install
 
